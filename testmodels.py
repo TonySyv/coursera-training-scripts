@@ -27,3 +27,16 @@ def test_find_product_by_name():
     db.add_product(Product(id=4, name="Pie", available=True))
     result = db.find_by_name("Pie")
     assert result.name == "Pie"
+
+def test_find_products_by_availability():
+    # Setup
+    db.add_product(Product(id=5, name="Taco", available=True))
+    db.add_product(Product(id=6, name="Pasta", available=False))
+    db.add_product(Product(id=7, name="Salad", available=True))
+
+    # Action
+    available_products = db.find_by_availability(True)
+
+    # Assert
+    assert all(p.available for p in available_products)
+    assert set(p.name for p in available_products) == {"Taco", "Salad"}
