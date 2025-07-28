@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cleanup
+spec:
+  steps:
+    - name: delete-temp-files
+      image: python:3.10
+      script: |
+        #!/bin/bash
+        echo "Cleaning up temporary files..."
+        rm -rf /workspace/source/__pycache__/
+        rm -rf /workspace/source/.pytest_cache/
+
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: run-nose-tests
+spec:
+  steps:
+    - name: install-deps-and-test
+      image: python:3.10
+      script: |
+        #!/bin/bash
+        pip install nose
+        echo "Running nose tests..."
+        nosetests /workspace/source/tests
